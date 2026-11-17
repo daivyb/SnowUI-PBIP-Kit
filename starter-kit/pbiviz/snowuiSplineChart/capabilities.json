@@ -1,0 +1,108 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Eje Principal (Ej. Mes)",
+      "name": "category",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Eje Alterno (Ej. Año)",
+      "name": "altCategory",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Métricas Eje Principal (hasta 3 pestañas)",
+      "name": "measures",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Métricas Eje Alterno (Opcional, ej. Anual)",
+      "name": "altMeasures",
+      "kind": "Measure"
+    }
+  ],
+  "objects": {
+    "chartStyle": {
+      "displayName": "Estilo Spline",
+      "properties": {
+        "lineColor": {
+          "displayName": "Color de curva",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "defaultChartMode": {
+          "displayName": "Modo inicial",
+          "type": {
+            "enumeration": [
+              { "displayName": "Línea con Área", "value": "area" },
+              { "displayName": "Solo Línea", "value": "line" }
+            ]
+          }
+        },
+        "defaultGranularity": {
+          "displayName": "Eje inicial",
+          "type": {
+            "enumeration": [
+              { "displayName": "Principal (Mensual)", "value": "primary" },
+              { "displayName": "Alterno (Anual)", "value": "secondary" }
+            ]
+          }
+        },
+        "primaryAxisLabel": {
+          "displayName": "Etiqueta eje principal",
+          "type": { "text": true }
+        },
+        "secondaryAxisLabel": {
+          "displayName": "Etiqueta eje alterno",
+          "type": { "text": true }
+        },
+        "currencyMode": {
+          "displayName": "Modo de moneda",
+          "type": {
+            "enumeration": [
+              { "displayName": "Automático (desde medida DAX)", "value": "auto" },
+              { "displayName": "Moneda de marca (brand-config)", "value": "brand" },
+              { "displayName": "Prefijo personalizado", "value": "custom" }
+            ]
+          }
+        },
+        "valuePrefix": {
+          "displayName": "Prefijo personalizado",
+          "type": { "text": true }
+        },
+        "animationMs": {
+          "displayName": "Duración morphing (ms)",
+          "type": { "numeric": true }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "categorical": {
+        "categories": {
+          "select": [
+            { "bind": { "to": "category" } },
+            { "bind": { "to": "altCategory" } }
+          ],
+          "dataReductionAlgorithm": {
+            "top": { "count": 500 }
+          }
+        },
+        "values": {
+          "select": [
+            { "for": { "in": "measures" } },
+            { "for": { "in": "altMeasures" } }
+          ]
+        }
+      }
+    }
+  ],
+  "supportsHighlight": true,
+  "privileges": []
+}

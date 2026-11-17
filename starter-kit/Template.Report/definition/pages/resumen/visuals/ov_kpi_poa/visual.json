@@ -1,0 +1,245 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ov_kpi_poa",
+  "position": {
+    "x": 244,
+    "y": 148,
+    "z": 36000,
+    "height": 156,
+    "width": 280,
+    "tabOrder": 36000
+  },
+  "visual": {
+    "visualType": "snowuiKpiCardE1A4B801",
+    "query": {
+      "queryState": {
+        "value": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Presupuesto"
+                }
+              },
+              "queryRef": "FactBase.Presupuesto",
+              "nativeQueryRef": "Presupuesto"
+            }
+          ]
+        },
+        "delta": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Variación YoY %"
+                }
+              },
+              "queryRef": "FactBase.Variación YoY %",
+              "nativeQueryRef": "Variación YoY %"
+            }
+          ]
+        },
+        "tooltipFields": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Registros"
+                }
+              },
+              "queryRef": "FactBase.Registros",
+              "nativeQueryRef": "Registros"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "cardStyle": [
+        {
+          "properties": {
+            "themeVariant": {
+              "expr": {
+                "Literal": {
+                  "Value": "'blue'"
+                }
+              }
+            },
+            "titleOverride": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Presupuesto'"
+                }
+              }
+            },
+            "subtitleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Plan asignado'"
+                }
+              }
+            },
+            "cornerRadius": {
+              "expr": {
+                "Literal": {
+                  "Value": "18D"
+                }
+              }
+            },
+            "animationMs": {
+              "expr": {
+                "Literal": {
+                  "Value": "560D"
+                }
+              }
+            },
+            "surfaceMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'gradient'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "numberFormat": [
+        {
+          "properties": {
+            "valuePrefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "valueSuffix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "displayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            },
+            "decimals": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "deltaIsRatio": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "deltaSuffix": {
+              "expr": {
+                "Literal": {
+                  "Value": "'%'"
+                }
+              }
+            },
+            "currencyMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

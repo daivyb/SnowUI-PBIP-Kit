@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0.0",
+  "author": {
+    "name": "Consultoría BI",
+    "email": "bi@consultora.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/snowuiSplineChartE1A4B802.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "name": "snowuiSplineChart",
+    "displayName": "SnowUI Spline Chart",
+    "guid": "snowuiSplineChartE1A4B802",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Gráfico spline suavizado Apple/SnowUI con pestañas de métricas, cambio Línea/Área y transición morphing.",
+    "supportUrl": "https://consultora.com",
+    "gitHubUrl": ""
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}

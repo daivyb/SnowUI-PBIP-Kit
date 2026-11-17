@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0.0",
+  "author": {
+    "name": "Consultoría BI",
+    "email": "bi@consultora.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/snowuiPillBarChartE1A4B803.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "name": "snowuiPillBarChart",
+    "displayName": "SnowUI Pill Bar Chart",
+    "guid": "snowuiPillBarChartE1A4B803",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Barras tipo cápsula Apple/SnowUI con callout flotante oscuro y modo micro-píldora apilada.",
+    "supportUrl": "https://consultora.com",
+    "gitHubUrl": ""
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}

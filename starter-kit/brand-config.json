@@ -1,0 +1,124 @@
+{
+  "$schema": "./brand-config.schema.json",
+  "client": {
+    "id": "cliente-plantilla",
+    "name": "Mi Empresa",
+    "subtitle": "Analítica Ejecutiva",
+    "breadcrumbRoot": "Panel",
+    "footerText": "© 2026 Mi Empresa · Analítica Ejecutiva · Estándar SnowUI",
+    "sideMetaText": "Modelo PBIP\nTMDL + PBIR + PBIVIZ",
+    "themeName": "SnowUIClientTheme",
+    "themeDisplayName": "SnowUI Cliente",
+    "locale": "es-PE",
+    "authorName": "Consultoría BI",
+    "authorEmail": "bi@consultora.com",
+    "supportUrl": "https://consultora.com"
+  },
+  "assets": {
+    "logoPath": "assets/client-logo.svg",
+    "registeredLogoName": "client-logo.svg"
+  },
+  "currency": {
+    "code": "USD",
+    "symbol": "$",
+    "numberLocale": "en-US",
+    "defaultDecimals": 1,
+    "mode": "auto",
+    "exposeCurrencySlicer": false
+  },
+  "style": {
+    "canvasPreset": "web-scroll",
+    "cornerRadius": 18,
+    "kpiSurfaceMode": "gradient",
+    "sidebarMode": "light",
+    "fontFamily": "Segoe UI",
+    "density": "comfortable"
+  },
+  "colors": {
+    "brand": {
+      "primary": "#007AFF",
+      "secondary": "#AF52DE",
+      "tertiary": "#00C7BE",
+      "darkSurface": "#1C1C1E"
+    },
+    "semantic": {
+      "positive": "#34C759",
+      "warning": "#FF9500",
+      "negative": "#FF3B30",
+      "alertText": "#DC2626",
+      "alertBg": "#FFF5F5",
+      "alertBorder": "#FECACA"
+    },
+    "surfaces": {
+      "canvas": "#F5F5F6",
+      "card": "#FFFFFF",
+      "border": "#E5E7EB",
+      "divider": "#F1F3F5",
+      "pillBg": "#F4F5F7",
+      "slicerBg": "#F8FAFC",
+      "navActiveBg": "#F1F5F9",
+      "navActiveBorder": "#E2E8F0"
+    },
+    "text": {
+      "primary": "#111827",
+      "secondary": "#6B7280",
+      "navInactive": "#1F2937",
+      "muted": "#9CA3AF",
+      "onDark": "#FFFFFF"
+    },
+    "dataColors": [
+      "#007AFF",
+      "#AF52DE",
+      "#34C759",
+      "#FF3B30",
+      "#00C7BE",
+      "#FF9500",
+      "#5AC8FA",
+      "#5856D6"
+    ]
+  },
+  "visualDefaults": {
+    "splineLineColor": "secondary",
+    "barDefaultAccent": "primary",
+    "defaultTableTitle": "Registros",
+    "defaultEmptyMessage": "Ajusta los filtros superiores para visualizar registros.",
+    "seriesColorRules": [],
+    "columnFriendlyNames": {}
+  },
+  "statusRules": [
+    {
+      "match": [
+        "activo",
+        "al día",
+        "complet",
+        "aprobado"
+      ],
+      "tone": "positive"
+    },
+    {
+      "match": [
+        "alerta",
+        "crítico",
+        "retraso",
+        "rechazado"
+      ],
+      "tone": "negative"
+    },
+    {
+      "match": [
+        "en curso",
+        "en proceso",
+        "técnico"
+      ],
+      "tone": "primary"
+    },
+    {
+      "match": [
+        "pendiente",
+        "revisión",
+        "administrativo"
+      ],
+      "tone": "secondary"
+    }
+  ]
+}

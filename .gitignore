@@ -1,0 +1,7 @@
+**/.pbi/
+**/node_modules/
+**/.tmp/
+**/_tmp_home/
+**/__pycache__/
+*.pyc
+.DS_Store

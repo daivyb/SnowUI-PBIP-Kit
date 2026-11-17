@@ -1,0 +1,237 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ov_spline",
+  "position": {
+    "x": 244,
+    "y": 320,
+    "z": 40000,
+    "height": 356,
+    "width": 1180,
+    "tabOrder": 40000
+  },
+  "visual": {
+    "visualType": "snowuiSplineChartE1A4B802",
+    "query": {
+      "queryState": {
+        "category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimMes"
+                    }
+                  },
+                  "Property": "MesCorto"
+                }
+              },
+              "queryRef": "DimMes.MesCorto",
+              "nativeQueryRef": "MesCorto",
+              "active": true
+            }
+          ]
+        },
+        "measures": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Ejecutado"
+                }
+              },
+              "queryRef": "FactBase.Ejecutado",
+              "nativeQueryRef": "Ejecutado"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Presupuesto"
+                }
+              },
+              "queryRef": "FactBase.Presupuesto",
+              "nativeQueryRef": "Presupuesto"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Saldo"
+                }
+              },
+              "queryRef": "FactBase.Saldo",
+              "nativeQueryRef": "Saldo"
+            }
+          ]
+        },
+        "altCategory": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "Anio"
+                }
+              },
+              "queryRef": "DimFecha.Anio",
+              "nativeQueryRef": "Anio"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "chartStyle": [
+        {
+          "properties": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#AF52DE'"
+                    }
+                  }
+                }
+              }
+            },
+            "defaultChartMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'area'"
+                }
+              }
+            },
+            "defaultGranularity": {
+              "expr": {
+                "Literal": {
+                  "Value": "'primary'"
+                }
+              }
+            },
+            "primaryAxisLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Por Mes'"
+                }
+              }
+            },
+            "secondaryAxisLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Por Año'"
+                }
+              }
+            },
+            "valuePrefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "animationMs": {
+              "expr": {
+                "Literal": {
+                  "Value": "620D"
+                }
+              }
+            },
+            "currencyMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

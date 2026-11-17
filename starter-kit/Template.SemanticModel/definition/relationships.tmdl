@@ -1,0 +1,7 @@
+relationship 8a100001-0000-4000-8000-000000000001
+	fromColumn: FactBase.IdFecha
+	toColumn: DimFecha.IdFecha
+
+relationship 8a100001-0000-4000-8000-000000000002
+	fromColumn: FactBase.MesNum
+	toColumn: DimMes.MesNum

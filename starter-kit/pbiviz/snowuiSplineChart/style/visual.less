@@ -1,0 +1,174 @@
+@import "./snowuiBase.less";
+
+.snow-spline-host {
+    .snow-root-reset();
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    overflow: hidden;
+}
+
+.snow-spline-card {
+    width: 100%;
+    height: 100%;
+    background: var(--snow-card-bg, @snow-card-bg);
+    border-radius: var(--snow-radius, @snow-radius);
+    padding: 18px 22px 14px 22px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.snow-spline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.snow-spline-tabs {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.snow-spline-tab {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 4px 2px 7px 2px;
+    font-family: @snow-font;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--snow-ink-muted, @snow-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 260ms @snow-ease, transform 220ms @snow-ease;
+
+    &:hover {
+        color: var(--snow-ink-secondary, @snow-secondary);
+    }
+
+    &.is-active {
+        color: var(--snow-spline-accent, var(--snow-secondary, @snow-secondary-brand));
+        font-weight: 600;
+
+        &::after {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        opacity: 0;
+        transition: transform 280ms @snow-ease, opacity 240ms @snow-ease;
+    }
+}
+
+.snow-spline-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.snow-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.045);
+    color: var(--snow-ink, @snow-ink);
+    font-family: @snow-font;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 220ms @snow-ease,
+        transform 180ms @snow-ease,
+        border-color 220ms @snow-ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.075);
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+
+    svg {
+        opacity: 0.65;
+    }
+}
+
+.snow-spline-canvas-wrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+
+.snow-spline-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+.snow-spline-area {
+    transition: opacity 380ms @snow-ease;
+}
+
+.snow-spline-path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.snow-spline-node {
+    cursor: pointer;
+    transition: r 220ms @snow-ease, stroke-width 220ms @snow-ease, opacity 220ms @snow-ease;
+}
+
+.snow-spline-callout {
+    position: absolute;
+    pointer-events: none;
+    background: var(--snow-dark, @snow-dark);
+    color: var(--snow-on-dark, @snow-on-dark);
+    font-size: 11.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    transition:
+        opacity 180ms @snow-ease,
+        left 120ms @snow-ease,
+        top 120ms @snow-ease;
+
+    &.is-visible {
+        opacity: 1;
+    }
+}

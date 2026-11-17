@@ -1,0 +1,24 @@
+{
+  "visual": {
+    "name": "snowuiPillBarChart",
+    "displayName": "SnowUI Pill Bar Chart",
+    "guid": "snowuiPillBarChartE1A4B803",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Barras tipo cápsula Apple/SnowUI con callout flotante oscuro y modo micro-píldora apilada.",
+    "supportUrl": "https://consultora.com",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.11.1",
+  "author": {
+    "name": "Consultoría BI",
+    "email": "bi@consultora.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "stringResources": []
+}

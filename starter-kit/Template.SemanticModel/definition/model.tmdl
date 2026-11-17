@@ -1,0 +1,21 @@
+model Model
+	culture: es-PE
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: es-PE
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DimFecha","DimMes","DimMonedaSelector","FactBase"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimFecha
+ref table DimMes
+ref table DimMonedaSelector
+ref table FactBase
+
+ref cultureInfo es-PE

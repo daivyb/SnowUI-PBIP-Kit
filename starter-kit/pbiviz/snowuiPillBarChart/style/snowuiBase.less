@@ -1,0 +1,67 @@
+@import "./snowuiTokens.less";
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+}
+
+.snow-root-reset() {
+    --snow-primary: @snow-primary;
+    --snow-secondary: @snow-secondary-brand;
+    --snow-tertiary: @snow-tertiary;
+    --snow-positive: @snow-positive;
+    --snow-warning: @snow-warning;
+    --snow-negative: @snow-negative;
+    --snow-dark: @snow-dark;
+    --snow-ink: @snow-ink;
+    --snow-ink-secondary: @snow-secondary;
+    --snow-ink-muted: @snow-muted;
+    --snow-on-dark: @snow-on-dark;
+    --snow-card-bg: @snow-card-bg;
+    --snow-border: @snow-border;
+    --snow-radius: @snow-radius;
+    --snow-hover-bg: @snow-hover-bg;
+    --snow-hover-border: @snow-hover-border;
+    --snow-selected-bg: @snow-selected-bg;
+    --snow-selected-border: @snow-selected-border;
+
+    font-family: @snow-font;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    color: var(--snow-ink, @snow-ink);
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+}
+
+.snow-empty-state {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: var(--snow-radius, @snow-radius);
+    background: var(--snow-card-bg, @snow-card-bg);
+    color: var(--snow-ink-secondary, @snow-secondary);
+    font-size: 12px;
+    text-align: center;
+    padding: 16px;
+    border: 1px dashed rgba(0, 0, 0, 0.10);
+
+    .snow-empty-title {
+        font-weight: 600;
+        color: var(--snow-ink, @snow-ink);
+        font-size: 13px;
+    }
+}

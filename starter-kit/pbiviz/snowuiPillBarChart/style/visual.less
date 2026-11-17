@@ -1,0 +1,156 @@
+@import "./snowuiBase.less";
+
+.snow-pillbar-host {
+    .snow-root-reset();
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    overflow: hidden;
+}
+
+.snow-pillbar-card {
+    width: 100%;
+    height: 100%;
+    background: var(--snow-card-bg, @snow-card-bg);
+    border-radius: var(--snow-radius, @snow-radius);
+    padding: 18px 20px 14px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.snow-pillbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.snow-pillbar-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.snow-pillbar-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--snow-ink, @snow-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.snow-pillbar-legend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.snow-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--snow-ink-secondary, @snow-secondary);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: @snow-font;
+    transition: opacity 220ms @snow-ease, background-color 220ms @snow-ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.045);
+    }
+
+    &.is-dimmed {
+        opacity: 0.35;
+        text-decoration: line-through;
+    }
+}
+
+.snow-legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.snow-pillbar-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.045);
+    color: var(--snow-ink-secondary, @snow-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.snow-pillbar-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+
+.snow-pillbar-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+.snow-bar-capsule {
+    pointer-events: none;
+    transition: fill 220ms @snow-ease, opacity 220ms @snow-ease, filter 220ms @snow-ease;
+}
+
+.snow-bar-hit {
+    cursor: pointer;
+}
+
+.snow-bar-micro {
+    cursor: pointer;
+    transition: opacity 200ms @snow-ease;
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
+.snow-pillbar-callout {
+    position: absolute;
+    pointer-events: none;
+    background: var(--snow-dark, @snow-dark);
+    color: var(--snow-on-dark, @snow-on-dark);
+    font-size: 11.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    padding: 4px 10px;
+    border-radius: 9px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    transition:
+        opacity 180ms @snow-ease,
+        left 200ms @snow-ease,
+        top 200ms @snow-ease;
+
+    &.is-visible {
+        opacity: 1;
+    }
+}

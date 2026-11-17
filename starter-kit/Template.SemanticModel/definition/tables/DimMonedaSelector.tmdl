@@ -1,0 +1,89 @@
+table DimMonedaSelector
+	lineageTag: 9f10a001-0000-4000-8000-000000000001
+
+	measure 'Moneda Activa' = SELECTEDVALUE(DimMonedaSelector[CodigoMoneda], "USD")
+		displayFolder: 00. Configuración Moneda
+		lineageTag: 9f10b001-0000-4000-8000-000000000001
+
+	measure 'Simbolo Moneda Activa' =
+			SWITCH(
+				SELECTEDVALUE(DimMonedaSelector[CodigoMoneda], "USD"),
+				"PEN", "S/",
+				"EUR", "€",
+				"$"
+			)
+		displayFolder: 00. Configuración Moneda
+		lineageTag: 9f10b001-0000-4000-8000-000000000002
+
+	measure 'Formato Moneda Activa' =
+			SWITCH(
+				SELECTEDVALUE(DimMonedaSelector[CodigoMoneda], "USD"),
+				"PEN", """S/ ""#,0.00;(""S/ ""#,0.00);""S/ ""#,0.00",
+				"EUR", """€""#,0.00;(""€""#,0.00);""€""#,0.00",
+				"\$#,0.00;(\$#,0.00);\$#,0.00"
+			)
+		displayFolder: 00. Configuración Moneda
+		lineageTag: 9f10b001-0000-4000-8000-000000000003
+
+	measure 'Factor Tipo Cambio' = IF(HASONEVALUE(DimMonedaSelector[CodigoMoneda]), SELECTEDVALUE(DimMonedaSelector[TipoCambioBase], 1), 1)
+		formatString: #,0.0000
+		displayFolder: 00. Configuración Moneda
+		lineageTag: 9f10b001-0000-4000-8000-000000000004
+
+	column CodigoMoneda
+		dataType: string
+		isKey
+		lineageTag: 9f10a001-0000-4000-8000-000000000011
+		summarizeBy: none
+		sourceColumn: CodigoMoneda
+		sortByColumn: Orden
+
+	column Simbolo
+		dataType: string
+		lineageTag: 9f10a001-0000-4000-8000-000000000012
+		summarizeBy: none
+		sourceColumn: Simbolo
+
+	column NombreMoneda
+		dataType: string
+		lineageTag: 9f10a001-0000-4000-8000-000000000013
+		summarizeBy: none
+		sourceColumn: NombreMoneda
+
+	column FormatoDAX
+		dataType: string
+		lineageTag: 9f10a001-0000-4000-8000-000000000014
+		summarizeBy: none
+		sourceColumn: FormatoDAX
+
+	column TipoCambioBase
+		dataType: double
+		formatString: #,0.0000
+		lineageTag: 9f10a001-0000-4000-8000-000000000015
+		summarizeBy: none
+		sourceColumn: TipoCambioBase
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9f10a001-0000-4000-8000-000000000016
+		summarizeBy: none
+		sourceColumn: Orden
+
+	partition DimMonedaSelector = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [CodigoMoneda = text, Simbolo = text, NombreMoneda = text, FormatoDAX = text, TipoCambioBase = number, Orden = Int64.Type],
+				        {
+				            {"USD", "$", "Dólar Estadounidense (USD)", "\$#,0.00;(\$#,0.00);\$#,0.00", 1.0, 1},
+				            {"PEN", "S/", "Sol Peruano (PEN)", """S/ ""#,0.00;(""S/ ""#,0.00);""S/ ""#,0.00", 1.0, 2},
+				            {"EUR", "€", "Euro (EUR)", """€""#,0.00;(""€""#,0.00);""€""#,0.00", 1.0, 3}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

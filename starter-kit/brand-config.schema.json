@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BrandConfigSnowUIPBIP",
+  "description": "Esquema centralizado de marca, moneda, tokens visuales y diales de estilo para proyectos PBIP/SnowUI.",
+  "type": "object",
+  "required": ["client", "assets", "currency", "style", "colors"],
+  "properties": {
+    "client": {
+      "type": "object",
+      "required": ["id", "name", "subtitle", "breadcrumbRoot", "footerText", "themeName", "locale"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "subtitle": { "type": "string" },
+        "breadcrumbRoot": { "type": "string" },
+        "footerText": { "type": "string" },
+        "sideMetaText": { "type": "string" },
+        "themeName": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "themeDisplayName": { "type": "string" },
+        "locale": { "type": "string", "minLength": 2 },
+        "authorName": { "type": "string" },
+        "authorEmail": { "type": "string" },
+        "supportUrl": { "type": "string" }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["logoPath", "registeredLogoName"],
+      "properties": {
+        "logoPath": { "type": "string", "minLength": 1 },
+        "registeredLogoName": { "type": "string", "minLength": 1 }
+      }
+    },
+    "currency": {
+      "type": "object",
+      "required": ["code", "symbol", "numberLocale", "mode"],
+      "properties": {
+        "code": { "type": "string", "minLength": 3, "maxLength": 5 },
+        "symbol": { "type": "string", "minLength": 1 },
+        "numberLocale": { "type": "string", "minLength": 2 },
+        "defaultDecimals": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "mode": { "type": "string", "enum": ["auto", "brand", "custom"] },
+        "exposeCurrencySlicer": { "type": "boolean" }
+      }
+    },
+    "style": {
+      "type": "object",
+      "required": ["canvasPreset", "cornerRadius", "kpiSurfaceMode", "sidebarMode", "fontFamily"],
+      "properties": {
+        "canvasPreset": { "type": "string", "enum": ["web-scroll", "screen-16x9"] },
+        "cornerRadius": { "type": "integer", "minimum": 0, "maximum": 32 },
+        "kpiSurfaceMode": { "type": "string", "enum": ["gradient", "solid", "light-bordered"] },
+        "sidebarMode": { "type": "string", "enum": ["light", "tinted", "dark"] },
+        "fontFamily": { "type": "string", "minLength": 1 },
+        "density": { "type": "string", "enum": ["comfortable", "compact"] }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "required": ["brand", "semantic", "surfaces", "text", "dataColors"],
+      "properties": {
+        "brand": {
+          "type": "object",
+          "required": ["primary", "secondary", "tertiary", "darkSurface"],
+          "additionalProperties": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        },
+        "semantic": {
+          "type": "object",
+          "required": ["positive", "warning", "negative", "alertText", "alertBg", "alertBorder"],
+          "additionalProperties": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        },
+        "surfaces": {
+          "type": "object",
+          "required": ["canvas", "card", "border", "divider", "pillBg", "slicerBg", "navActiveBg", "navActiveBorder"],
+          "additionalProperties": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        },
+        "text": {
+          "type": "object",
+          "required": ["primary", "secondary", "navInactive", "muted", "onDark"],
+          "additionalProperties": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        },
+        "dataColors": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        }
+      }
+    },
+    "visualDefaults": {
+      "type": "object",
+      "properties": {
+        "splineLineColor": { "type": "string" },
+        "barDefaultAccent": { "type": "string" },
+        "defaultTableTitle": { "type": "string" },
+        "defaultEmptyMessage": { "type": "string" },
+        "seriesColorRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["match", "color"],
+            "properties": {
+              "match": { "type": "array", "items": { "type": "string" } },
+              "color": { "type": "string" },
+              "stackOrder": { "type": "integer" }
+            }
+          }
+        },
+        "columnFriendlyNames": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "statusRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["match", "tone"],
+        "properties": {
+          "match": { "type": "array", "items": { "type": "string" } },
+          "tone": { "type": "string", "enum": ["positive", "negative", "warning", "primary", "secondary", "muted"] },
+          "label": { "type": "string" }
+        }
+      }
+    }
+  }
+}

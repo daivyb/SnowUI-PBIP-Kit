@@ -1,0 +1,203 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU05",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "SnowUIClientTheme.json",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU05",
+          "path": "BaseThemes/CY26SU05.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "SnowUIClientTheme.json",
+          "path": "SnowUIClientTheme.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "chrome-sidebar.svg",
+          "path": "chrome-sidebar.svg",
+          "type": "Image"
+        },
+        {
+          "name": "chrome-topbar.svg",
+          "path": "chrome-topbar.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-alert.svg",
+          "path": "icon-alert.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-ejecutores.svg",
+          "path": "icon-ejecutores.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-overview.svg",
+          "path": "icon-overview.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-proyectos.svg",
+          "path": "icon-proyectos.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-reset.svg",
+          "path": "icon-reset.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-sidebar-toggle.svg",
+          "path": "icon-sidebar-toggle.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-star.svg",
+          "path": "icon-star.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-sun.svg",
+          "path": "icon-sun.svg",
+          "type": "Image"
+        },
+        {
+          "name": "icon-ubicacion.svg",
+          "path": "icon-ubicacion.svg",
+          "type": "Image"
+        },
+        {
+          "name": "nav-pill-active.svg",
+          "path": "nav-pill-active.svg",
+          "type": "Image"
+        },
+        {
+          "name": "pill-alert.svg",
+          "path": "pill-alert.svg",
+          "type": "Image"
+        },
+        {
+          "name": "pill-surface.svg",
+          "path": "pill-surface.svg",
+          "type": "Image"
+        },
+        {
+          "name": "client-logo.svg",
+          "path": "client-logo.svg",
+          "type": "Image"
+        }
+      ]
+    },
+    {
+      "name": "snowuiKpiCardE1A4B801",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "snowuiKpiCardE1A4B801.pbiviz.json",
+          "path": "snowuiKpiCardE1A4B801.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "snowuiSplineChartE1A4B802",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "snowuiSplineChartE1A4B802.pbiviz.json",
+          "path": "snowuiSplineChartE1A4B802.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "snowuiPillBarChartE1A4B803",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "snowuiPillBarChartE1A4B803.pbiviz.json",
+          "path": "snowuiPillBarChartE1A4B803.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "snowuiPillTableE1A4B804",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "snowuiPillTableE1A4B804.pbiviz.json",
+          "path": "snowuiPillTableE1A4B804.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true,
+    "locale": "es-PE"
+  }
+}

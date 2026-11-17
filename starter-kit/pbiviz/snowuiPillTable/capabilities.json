@@ -1,0 +1,79 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Columna Principal (con Avatar)",
+      "name": "primaryColumn",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Columnas de Detalle",
+      "name": "detailColumns",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Métricas",
+      "name": "measures",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Columna de Estado (Badge)",
+      "name": "statusColumn",
+      "kind": "Grouping"
+    }
+  ],
+  "objects": {
+    "tableStyle": {
+      "displayName": "Estilo de Tabla",
+      "properties": {
+        "titleOverride": {
+          "displayName": "Título de tarjeta",
+          "type": { "text": true }
+        },
+        "maxRows": {
+          "displayName": "Máximo de filas visibles",
+          "type": { "numeric": true }
+        },
+        "currencyMode": {
+          "displayName": "Modo de moneda",
+          "type": {
+            "enumeration": [
+              { "displayName": "Automático (desde medida DAX)", "value": "auto" },
+              { "displayName": "Moneda de marca (brand-config)", "value": "brand" },
+              { "displayName": "Prefijo personalizado", "value": "custom" }
+            ]
+          }
+        },
+        "valuePrefix": {
+          "displayName": "Prefijo personalizado",
+          "type": { "text": true }
+        },
+        "showAvatars": {
+          "displayName": "Mostrar avatar circular",
+          "type": { "bool": true }
+        },
+        "staggerMs": {
+          "displayName": "Escalonado transición (ms)",
+          "type": { "numeric": true }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "table": {
+        "rows": {
+          "select": [
+            { "bind": { "to": "primaryColumn" } },
+            { "for": { "in": "detailColumns" } },
+            { "for": { "in": "measures" } },
+            { "bind": { "to": "statusColumn" } }
+          ],
+          "dataReductionAlgorithm": {
+            "top": { "count": 200 }
+          }
+        }
+      }
+    }
+  ],
+  "privileges": []
+}

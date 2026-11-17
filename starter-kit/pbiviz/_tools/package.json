@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "powerbi-visuals-tools": "^7.2.1"
+  }
+}

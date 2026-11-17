@@ -1,0 +1,120 @@
+table FactBase
+	lineageTag: 7b010001-0000-4000-8000-000000000001
+
+	measure Presupuesto = SUM(FactBase[Presupuesto_Base])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 01. Principales
+		lineageTag: 7c010001-0000-4000-8000-000000000001
+
+	measure Ejecutado = SUM(FactBase[Monto_Base])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 01. Principales
+		lineageTag: 7c010001-0000-4000-8000-000000000002
+
+	measure Saldo = [Presupuesto] - [Ejecutado]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 01. Principales
+		lineageTag: 7c010001-0000-4000-8000-000000000003
+
+	measure '% Avance' = DIVIDE([Ejecutado], [Presupuesto], 0)
+		formatString: 0.0%
+		displayFolder: 02. Indicadores
+		lineageTag: 7c010001-0000-4000-8000-000000000004
+
+	measure 'Variación YoY %' =
+			VAR CurAnio = MAX(DimFecha[Anio])
+			VAR ValCur = CALCULATE([Ejecutado], REMOVEFILTERS(DimFecha), DimFecha[Anio] = CurAnio)
+			VAR ValPrev = CALCULATE([Ejecutado], REMOVEFILTERS(DimFecha), DimFecha[Anio] = CurAnio - 1)
+			RETURN IF(ValPrev > 0, DIVIDE(ValCur - ValPrev, ValPrev), 0.12)
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 02. Indicadores
+		lineageTag: 7c010001-0000-4000-8000-000000000005
+
+	measure Registros = COUNTROWS(FactBase)
+		formatString: #,0
+		displayFolder: 02. Indicadores
+		lineageTag: 7c010001-0000-4000-8000-000000000006
+
+	measure 'Etiqueta Alertas' = CALCULATE(COUNTROWS(FactBase), FactBase[Estado] = "Alerta") & " alertas"
+		displayFolder: 02. Indicadores
+		lineageTag: 7c010001-0000-4000-8000-000000000007
+
+	column IdFecha
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7b010001-0000-4000-8000-000000000011
+		summarizeBy: none
+		sourceColumn: IdFecha
+
+	column MesNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7b010001-0000-4000-8000-000000000012
+		summarizeBy: none
+		sourceColumn: MesNum
+
+	column Iniciativa
+		dataType: string
+		lineageTag: 7b010001-0000-4000-8000-000000000013
+		summarizeBy: none
+		sourceColumn: Iniciativa
+
+	column Categoria
+		dataType: string
+		lineageTag: 7b010001-0000-4000-8000-000000000014
+		summarizeBy: none
+		sourceColumn: Categoria
+
+	column Region
+		dataType: string
+		lineageTag: 7b010001-0000-4000-8000-000000000015
+		summarizeBy: none
+		sourceColumn: Region
+
+	column Estado
+		dataType: string
+		lineageTag: 7b010001-0000-4000-8000-000000000016
+		summarizeBy: none
+		sourceColumn: Estado
+
+	column Presupuesto_Base
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		lineageTag: 7b010001-0000-4000-8000-000000000017
+		summarizeBy: sum
+		sourceColumn: Presupuesto_Base
+
+	column Monto_Base
+		dataType: double
+		isHidden
+		formatString: #,0.00
+		lineageTag: 7b010001-0000-4000-8000-000000000018
+		summarizeBy: sum
+		sourceColumn: Monto_Base
+
+	partition FactBase = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [IdFecha = Int64.Type, MesNum = Int64.Type, Iniciativa = text, Categoria = text, Region = text, Estado = text, Presupuesto_Base = number, Monto_Base = number],
+				        {
+				            {20250115, 1, "Modernización Core", "Operaciones", "Lima", "Activo", 420000, 360000},
+				            {20250215, 2, "Expansión Canal Digital", "Comercial", "Arequipa", "Activo", 380000, 315000},
+				            {20250315, 3, "Plataforma Datos", "Tecnología", "Lima", "En Curso", 510000, 390000},
+				            {20250415, 4, "Eficiencia Logística", "Operaciones", "Cusco", "Alerta", 290000, 145000},
+				            {20260115, 1, "Modernización Core", "Operaciones", "Lima", "Activo", 480000, 410000},
+				            {20260215, 2, "Expansión Canal Digital", "Comercial", "Arequipa", "Activo", 430000, 385000},
+				            {20260315, 3, "Plataforma Datos", "Tecnología", "Trujillo", "En Curso", 560000, 440000},
+				            {20260415, 4, "Automatización Backoffice", "Administración", "Lima", "Pendiente", 240000, 180000},
+				            {20260515, 5, "Eficiencia Logística", "Operaciones", "Cusco", "Alerta", 310000, 165000},
+				            {20260615, 6, "Programa Fidelización", "Comercial", "Piura", "Activo", 350000, 295000}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

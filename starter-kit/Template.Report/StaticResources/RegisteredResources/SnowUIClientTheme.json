@@ -1,0 +1,96 @@
+{
+  "name": "SnowUI Cliente",
+  "dataColors": [
+    "#007AFF",
+    "#AF52DE",
+    "#34C759",
+    "#FF3B30",
+    "#00C7BE",
+    "#FF9500",
+    "#5AC8FA",
+    "#5856D6"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#111827",
+  "tableAccent": "#007AFF",
+  "good": "#34C759",
+  "neutral": "#FF9500",
+  "bad": "#FF3B30",
+  "maximum": "#007AFF",
+  "center": "#5AC8FA",
+  "minimum": "#E5E7EB",
+  "null": "#F1F3F5",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 14,
+      "color": "#111827"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 11,
+      "color": "#6B7280"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#111827"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Bold",
+      "fontSize": 24,
+      "color": "#111827"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": false,
+            "radius": 18
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F5F5F6"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F5F5F6"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

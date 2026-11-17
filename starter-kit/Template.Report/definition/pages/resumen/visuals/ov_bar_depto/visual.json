@@ -1,0 +1,198 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ov_bar_depto",
+  "position": {
+    "x": 844,
+    "y": 696,
+    "z": 42000,
+    "height": 328,
+    "width": 580,
+    "tabOrder": 42000
+  },
+  "visual": {
+    "visualType": "snowuiPillBarChartE1A4B803",
+    "query": {
+      "queryState": {
+        "category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Region"
+                }
+              },
+              "queryRef": "FactBase.Region",
+              "nativeQueryRef": "Region",
+              "active": true
+            }
+          ]
+        },
+        "measure": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Ejecutado"
+                }
+              },
+              "queryRef": "FactBase.Ejecutado",
+              "nativeQueryRef": "Ejecutado"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "barStyle": [
+        {
+          "properties": {
+            "displayMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'pill'"
+                }
+              }
+            },
+            "titleOverride": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ejecución por Región'"
+                }
+              }
+            },
+            "accentColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#34C759'"
+                    }
+                  }
+                }
+              }
+            },
+            "topN": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            },
+            "sortOrder": {
+              "expr": {
+                "Literal": {
+                  "Value": "'desc'"
+                }
+              }
+            },
+            "valuePrefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "showFloatingCallout": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "animationMs": {
+              "expr": {
+                "Literal": {
+                  "Value": "560D"
+                }
+              }
+            },
+            "currencyMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

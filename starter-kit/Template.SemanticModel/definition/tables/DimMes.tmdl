@@ -1,0 +1,57 @@
+table DimMes
+	lineageTag: 2a020001-0000-4000-8000-000000000001
+
+	column MesNum
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 2a020001-0000-4000-8000-000000000011
+		summarizeBy: none
+		sourceColumn: MesNum
+
+	column MesCorto
+		dataType: string
+		lineageTag: 2a020001-0000-4000-8000-000000000012
+		summarizeBy: none
+		sourceColumn: MesCorto
+		sortByColumn: MesNum
+
+	column MesNombre
+		dataType: string
+		lineageTag: 2a020001-0000-4000-8000-000000000013
+		summarizeBy: none
+		sourceColumn: MesNombre
+		sortByColumn: MesNum
+
+	column Trimestre
+		dataType: string
+		lineageTag: 2a020001-0000-4000-8000-000000000014
+		summarizeBy: none
+		sourceColumn: Trimestre
+
+	partition DimMes = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [MesNum = Int64.Type, MesCorto = text, MesNombre = text, Trimestre = text],
+				        {
+				            {1, "Ene", "Enero", "T1"},
+				            {2, "Feb", "Febrero", "T1"},
+				            {3, "Mar", "Marzo", "T1"},
+				            {4, "Abr", "Abril", "T2"},
+				            {5, "May", "Mayo", "T2"},
+				            {6, "Jun", "Junio", "T2"},
+				            {7, "Jul", "Julio", "T3"},
+				            {8, "Ago", "Agosto", "T3"},
+				            {9, "Sep", "Septiembre", "T3"},
+				            {10, "Oct", "Octubre", "T4"},
+				            {11, "Nov", "Noviembre", "T4"},
+				            {12, "Dic", "Diciembre", "T4"}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0.0",
+  "author": {
+    "name": "Consultoría BI",
+    "email": "bi@consultora.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/snowuiPillTableE1A4B804.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "name": "snowuiPillTable",
+    "displayName": "SnowUI Pill Table",
+    "guid": "snowuiPillTableE1A4B804",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Tabla moderna Apple/SnowUI con filas cápsula, avatar monograma, insignias pastel y transiciones escalonadas.",
+    "supportUrl": "https://consultora.com",
+    "gitHubUrl": ""
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}

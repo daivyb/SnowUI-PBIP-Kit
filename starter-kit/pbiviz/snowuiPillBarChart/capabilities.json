@@ -1,0 +1,118 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Categoría Principal (Eje X)",
+      "name": "category",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Sub-Categoría (Agrupación por barra)",
+      "name": "subCategory",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Serie (Segmentos apilados)",
+      "name": "series",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Medida (Valor)",
+      "name": "measure",
+      "kind": "Measure"
+    }
+  ],
+  "objects": {
+    "barStyle": {
+      "displayName": "Estilo de Barras",
+      "properties": {
+        "displayMode": {
+          "displayName": "Modo Visual",
+          "type": {
+            "enumeration": [
+              { "displayName": "Cápsulas Simples (Pill)", "value": "pill" },
+              { "displayName": "Micro-Píldoras Apiladas (Micro Stacked)", "value": "microStacked" }
+            ]
+          }
+        },
+        "titleOverride": {
+          "displayName": "Título de tarjeta",
+          "type": { "text": true }
+        },
+        "accentColor": {
+          "displayName": "Color acento / título",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "topN": {
+          "displayName": "Top N categorías (0 = todas)",
+          "type": { "numeric": true }
+        },
+        "sortOrder": {
+          "displayName": "Orden",
+          "type": {
+            "enumeration": [
+              { "displayName": "Descendente por valor", "value": "desc" },
+              { "displayName": "Ascendente por valor", "value": "asc" },
+              { "displayName": "Natural (Meses / Orden)", "value": "natural" }
+            ]
+          }
+        },
+        "currencyMode": {
+          "displayName": "Modo de moneda",
+          "type": {
+            "enumeration": [
+              { "displayName": "Automático (desde medida DAX)", "value": "auto" },
+              { "displayName": "Moneda de marca (brand-config)", "value": "brand" },
+              { "displayName": "Prefijo personalizado", "value": "custom" }
+            ]
+          }
+        },
+        "valuePrefix": {
+          "displayName": "Prefijo personalizado",
+          "type": { "text": true }
+        },
+        "showFloatingCallout": {
+          "displayName": "Callout flotante oscuro",
+          "type": { "bool": true }
+        },
+        "animationMs": {
+          "displayName": "Duración transición (ms)",
+          "type": { "numeric": true }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "categorical": {
+        "categories": {
+          "select": [
+            { "bind": { "to": "category" } },
+            { "bind": { "to": "subCategory" } }
+          ],
+          "dataReductionAlgorithm": {
+            "top": { "count": 500 }
+          }
+        },
+        "values": {
+          "group": {
+            "by": "series",
+            "select": [
+              { "bind": { "to": "measure" } }
+            ],
+            "dataReductionAlgorithm": {
+              "top": { "count": 12 }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "supportsHighlight": true,
+  "privileges": []
+}

@@ -1,0 +1,248 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ov_bar_micro",
+  "position": {
+    "x": 244,
+    "y": 1044,
+    "z": 43000,
+    "height": 274,
+    "width": 1180,
+    "tabOrder": 43000
+  },
+  "visual": {
+    "visualType": "snowuiPillBarChartE1A4B803",
+    "query": {
+      "queryState": {
+        "category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimMes"
+                    }
+                  },
+                  "Property": "MesCorto"
+                }
+              },
+              "queryRef": "DimMes.MesCorto",
+              "nativeQueryRef": "MesCorto",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "Anio"
+                }
+              },
+              "queryRef": "DimFecha.Anio",
+              "nativeQueryRef": "Anio"
+            }
+          ]
+        },
+        "measure": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Ejecutado"
+                }
+              },
+              "queryRef": "FactBase.Ejecutado",
+              "nativeQueryRef": "Ejecutado"
+            }
+          ]
+        },
+        "subCategory": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFecha"
+                    }
+                  },
+                  "Property": "Anio"
+                }
+              },
+              "queryRef": "DimFecha.Anio",
+              "nativeQueryRef": "Anio"
+            }
+          ]
+        },
+        "series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Categoria"
+                }
+              },
+              "queryRef": "FactBase.Categoria",
+              "nativeQueryRef": "Categoria"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "barStyle": [
+        {
+          "properties": {
+            "displayMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'microStacked'"
+                }
+              }
+            },
+            "titleOverride": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Distribución Mensual por Categoría'"
+                }
+              }
+            },
+            "accentColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FF3B30'"
+                    }
+                  }
+                }
+              }
+            },
+            "topN": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "sortOrder": {
+              "expr": {
+                "Literal": {
+                  "Value": "'natural'"
+                }
+              }
+            },
+            "valuePrefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "showFloatingCallout": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "animationMs": {
+              "expr": {
+                "Literal": {
+                  "Value": "560D"
+                }
+              }
+            },
+            "currencyMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

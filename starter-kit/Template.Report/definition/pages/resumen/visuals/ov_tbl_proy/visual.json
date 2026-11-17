@@ -1,0 +1,251 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ov_tbl_proy",
+  "position": {
+    "x": 244,
+    "y": 1338,
+    "z": 44000,
+    "height": 302,
+    "width": 1180,
+    "tabOrder": 44000
+  },
+  "visual": {
+    "visualType": "snowuiPillTableE1A4B804",
+    "query": {
+      "queryState": {
+        "primaryColumn": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Iniciativa"
+                }
+              },
+              "queryRef": "FactBase.Iniciativa",
+              "nativeQueryRef": "Iniciativa",
+              "active": true
+            }
+          ]
+        },
+        "measures": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Presupuesto"
+                }
+              },
+              "queryRef": "FactBase.Presupuesto",
+              "nativeQueryRef": "Presupuesto"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Ejecutado"
+                }
+              },
+              "queryRef": "FactBase.Ejecutado",
+              "nativeQueryRef": "Ejecutado"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "% Avance"
+                }
+              },
+              "queryRef": "FactBase.% Avance",
+              "nativeQueryRef": "% Avance"
+            }
+          ]
+        },
+        "detailColumns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Categoria"
+                }
+              },
+              "queryRef": "FactBase.Categoria",
+              "nativeQueryRef": "Categoria"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Region"
+                }
+              },
+              "queryRef": "FactBase.Region",
+              "nativeQueryRef": "Region"
+            }
+          ]
+        },
+        "statusColumn": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactBase"
+                    }
+                  },
+                  "Property": "Estado"
+                }
+              },
+              "queryRef": "FactBase.Estado",
+              "nativeQueryRef": "Estado"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "tableStyle": [
+        {
+          "properties": {
+            "titleOverride": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Detalle de Iniciativas'"
+                }
+              }
+            },
+            "valuePrefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "showAvatars": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "staggerMs": {
+              "expr": {
+                "Literal": {
+                  "Value": "34D"
+                }
+              }
+            },
+            "maxRows": {
+              "expr": {
+                "Literal": {
+                  "Value": "150D"
+                }
+              }
+            },
+            "currencyMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'auto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

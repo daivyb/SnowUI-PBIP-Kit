@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0.0",
+  "author": {
+    "name": "Consultoría BI",
+    "email": "bi@consultora.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/snowuiKpiCardE1A4B801.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "name": "snowuiKpiCard",
+    "displayName": "SnowUI KPI Card",
+    "guid": "snowuiKpiCardE1A4B801",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Tarjeta KPI con gradiente Apple/SnowUI, icono de tendencia y conteo numerico animado.",
+    "supportUrl": "https://consultora.com",
+    "gitHubUrl": ""
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}
