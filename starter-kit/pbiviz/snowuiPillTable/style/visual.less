@@ -78,18 +78,20 @@
     border: none;
     background: transparent;
     padding: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     font-family: @snow-font;
     font-size: 11.5px;
     font-weight: 500;
     color: var(--snow-ink-muted, @snow-muted);
     text-align: left;
     cursor: pointer;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
     transition: color 200ms @snow-ease;
 
     &.is-numeric,
@@ -103,6 +105,18 @@
         color: var(--snow-ink, @snow-ink);
         font-weight: 600;
     }
+}
+
+.snow-col-hdr-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.snow-col-hdr-arrow {
+    flex-shrink: 0;
+    line-height: 1;
 }
 
 .snow-table-rows-scroll {
@@ -235,4 +249,63 @@
     height: 6px;
     border-radius: 50%;
     flex-shrink: 0;
+}
+
+.snow-table-card.is-compact {
+    padding: 12px 14px 10px 14px;
+
+    .snow-table-header-bar {
+        margin-bottom: 6px;
+    }
+
+    .snow-table-title {
+        font-size: 13px;
+    }
+
+    .snow-table-count-pill,
+    .snow-table-badge {
+        font-size: 10px;
+        padding: 2px 7px;
+    }
+
+    .snow-table-cols-header {
+        gap: 8px;
+        padding: 0 10px 6px 10px;
+        font-size: 10.5px;
+    }
+
+    .snow-col-hdr-btn {
+        font-size: 10.5px;
+    }
+
+    .snow-table-rows-scroll {
+        gap: 4px;
+    }
+
+    .snow-table-pill-row {
+        min-height: 34px;
+        padding: 4px 10px;
+        border-radius: 10px;
+        gap: 8px;
+    }
+
+    .snow-avatar {
+        width: 22px;
+        height: 22px;
+        font-size: 9.5px;
+    }
+
+    .snow-cell-primary-text,
+    .snow-cell-num {
+        font-size: 11.5px;
+    }
+
+    .snow-cell-text {
+        font-size: 11px;
+    }
+
+    .snow-status-pill {
+        font-size: 10px;
+        padding: 2px 7px;
+    }
 }

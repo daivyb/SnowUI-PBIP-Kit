@@ -71,7 +71,7 @@ def main() -> int:
     os.makedirs(target_dir, exist_ok=True)
 
     # 1. Copiar contenido del starter-kit excluyendo node_modules/.tmp/__pycache__
-    ignore = shutil.ignore_patterns("node_modules", ".tmp", "__pycache__", "*.pyc", ".pbi")
+    ignore = shutil.ignore_patterns("node_modules", ".tmp", "__pycache__", "*.pyc", ".pbi", ".snowui-page-layouts.json")
     for entry in os.listdir(kit_dir):
         src = os.path.join(kit_dir, entry)
         dst_name = entry
@@ -141,10 +141,20 @@ def main() -> int:
         if os.path.isdir(rules_src):
             shutil.copytree(rules_src, os.path.join(target_dir, ".agents", "rules"), dirs_exist_ok=True)
 
-    # 5. Aplicar preset de lienzo si se solicitó
-    if args.preset:
+    # 5. Aplicar preset de lienzo si se solicitó o si brand-config.json define uno distinto al base
+    effective_preset = args.preset
+    if not effective_preset:
+        bc_target = os.path.join(target_dir, "brand-config.json")
+        if os.path.exists(bc_target):
+            try:
+                cfg_preset = json.load(open(bc_target, encoding="utf-8")).get("style", {}).get("canvasPreset")
+                if cfg_preset in ("web-scroll", "screen-16x9") and cfg_preset != "web-scroll":
+                    effective_preset = cfg_preset
+            except Exception:
+                effective_preset = None
+    if effective_preset:
         manage_script = os.path.join(skills_base, "pbir-report-layout", "scripts", "manage_pages.py")
-        res = subprocess.run([sys.executable, manage_script, "--root", target_dir, "set-preset", "--target", "all", "--preset", args.preset], check=False)
+        res = subprocess.run([sys.executable, manage_script, "--root", target_dir, "set-preset", "--target", "all", "--preset", effective_preset], check=False)
         if res.returncode != 0:
             return res.returncode
 

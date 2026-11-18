@@ -68,6 +68,7 @@ export class Visual implements IVisual {
     private sortColIdx: number = -1;
     private sortAsc: boolean = false;
     private selectedRowKey: string | null = null;
+    private isCompact: boolean = false;
 
     constructor(options: VisualConstructorOptions) {
         this.host = options.host;
@@ -113,14 +114,17 @@ export class Visual implements IVisual {
         this.events.renderingStarted(options);
         try {
             applyHostColorTokens(this.target, this.host.colorPalette);
-            if (options.viewport?.width > 0) {
-                this.target.style.width = `${Math.floor(options.viewport.width)}px`;
+            const vpW = Math.floor(options.viewport?.width || 0);
+            const vpH = Math.floor(options.viewport?.height || 0);
+            if (vpW > 0) {
+                this.target.style.width = `${vpW}px`;
             }
-            if (options.viewport?.height > 0) {
-                const h = Math.floor(options.viewport.height);
-                this.target.style.height = `${h}px`;
-                this.cardEl.style.height = `${h}px`;
+            if (vpH > 0) {
+                this.target.style.height = `${vpH}px`;
+                this.cardEl.style.height = `${vpH}px`;
             }
+            this.isCompact = (vpH > 0 && vpH < 290) || (vpW > 0 && vpW < 780);
+            this.cardEl.classList.toggle("is-compact", this.isCompact);
 
             const dataView = options.dataViews?.[0];
             this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(
@@ -185,10 +189,14 @@ export class Visual implements IVisual {
                 currencyMode,
                 customPrefix,
             });
-            let widthTrack = "minmax(72px, 1.05fr)";
-            if (role === "primary") widthTrack = "minmax(128px, 2.2fr)";
-            else if (role === "measure") widthTrack = "minmax(68px, 0.9fr)";
-            else if (role === "status") widthTrack = "minmax(82px, 0.9fr)";
+            let widthTrack = this.isCompact ? "minmax(58px, 0.92fr)" : "minmax(72px, 1.05fr)";
+            if (role === "primary") {
+                widthTrack = this.isCompact ? "minmax(108px, 1.8fr)" : "minmax(128px, 2.2fr)";
+            } else if (role === "measure") {
+                widthTrack = this.isCompact ? "minmax(72px, 1.05fr)" : "minmax(68px, 0.9fr)";
+            } else if (role === "status") {
+                widthTrack = this.isCompact ? "minmax(74px, 0.92fr)" : "minmax(82px, 0.9fr)";
+            }
             return {
                 index: origIdx,
                 displayName: name,
@@ -234,13 +242,16 @@ export class Visual implements IVisual {
 
         this.columnsMeta.forEach((col, colPos) => {
             const isSorted = this.sortColIdx === colPos;
-            const arrow = isSorted ? (this.sortAsc ? " ↑" : " ↓") : "";
             const btn = el(
                 "button",
                 `snow-col-hdr-btn${col.role === "measure" ? " is-numeric" : ""}${col.role === "status" ? " is-status" : ""}${isSorted ? " is-sorted" : ""}`,
-                `${col.displayName}${arrow}`,
             ) as HTMLButtonElement;
             btn.type = "button";
+            btn.title = col.displayName;
+            btn.appendChild(el("span", "snow-col-hdr-label", col.displayName));
+            if (isSorted) {
+                btn.appendChild(el("span", "snow-col-hdr-arrow", this.sortAsc ? "↑" : "↓"));
+            }
             btn.addEventListener("click", (e) => {
                 e.stopPropagation();
                 if (this.sortColIdx === colPos) {

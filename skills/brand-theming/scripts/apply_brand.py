@@ -203,22 +203,41 @@ def sidebar_palette(cfg: dict) -> dict[str, str]:
     }
 
 
-def write_svg_resources(cfg: dict, reg_dir: str, repo_root: str, dry_run: bool) -> list[str]:
+def detect_sidebar_svg_height(cfg: dict, report_dir: str) -> int:
+    pages_dir = os.path.join(report_dir, "definition", "pages")
+    pages_meta_p = os.path.join(pages_dir, "pages.json")
+    if os.path.exists(pages_meta_p):
+        try:
+            order = json.load(open(pages_meta_p, encoding="utf-8")).get("pageOrder", [])
+            if order:
+                pjson_p = os.path.join(pages_dir, order[0], "page.json")
+                if os.path.exists(pjson_p):
+                    ph = int(json.load(open(pjson_p, encoding="utf-8")).get("height", 1708))
+                    return max(700, ph - 28)
+        except Exception:
+            pass
+    preset = cfg.get("style", {}).get("canvasPreset", "web-scroll")
+    return 782 if preset == "screen-16x9" else 1680
+
+
+def write_svg_resources(cfg: dict, reg_dir: str, repo_root: str, report_dir: str, dry_run: bool) -> list[str]:
     colors = cfg["colors"]
     sb = sidebar_palette(cfg)
     radius = int(cfg["style"].get("cornerRadius", 18))
     sb_radius = max(12, min(26, radius + 4))
     tb_radius = max(12, min(24, radius + 2))
+    sb_h = detect_sidebar_svg_height(cfg, report_dir)
+    sb_div_bottom = sb_h - 82
     primary = colors["brand"]["primary"]
     ink = colors["text"]["primary"]
     neg = colors["semantic"]["negative"]
 
     svgs: dict[str, str] = {
         "chrome-sidebar.svg": (
-            f'<svg xmlns="http://www.w3.org/2000/svg" width="212" height="1680" viewBox="0 0 212 1680" fill="none">\n'
-            f'  <rect x="0.5" y="0.5" width="211" height="1679" rx="{sb_radius}" fill="{sb["bg"]}" stroke="{sb["border"]}"/>\n'
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="212" height="{sb_h}" viewBox="0 0 212 {sb_h}" fill="none">\n'
+            f'  <rect x="0.5" y="0.5" width="211" height="{sb_h - 1}" rx="{sb_radius}" fill="{sb["bg"]}" stroke="{sb["border"]}"/>\n'
             f'  <line x1="20" y1="92" x2="192" y2="92" stroke="{sb["divider"]}" stroke-width="1"/>\n'
-            f'  <line x1="20" y1="1598" x2="192" y2="1598" stroke="{sb["divider"]}" stroke-width="1"/>\n'
+            f'  <line x1="20" y1="{sb_div_bottom}" x2="192" y2="{sb_div_bottom}" stroke="{sb["divider"]}" stroke-width="1"/>\n'
             f'</svg>\n'
         ),
         "chrome-topbar.svg": (
@@ -811,7 +830,7 @@ def main() -> int:
     reg_dir = os.path.join(paths.report_dir, "StaticResources", "RegisteredResources")
     pbiviz_root = os.path.join(paths.repo_root, "pbiviz")
 
-    svgs = write_svg_resources(cfg, reg_dir, paths.repo_root, args.dry_run)
+    svgs = write_svg_resources(cfg, reg_dir, paths.repo_root, paths.report_dir, args.dry_run)
     update_report_json(cfg, paths.report_dir, reg_dir, args.dry_run)
     vis_count = update_pbir_visuals(cfg, paths.report_dir, pbiviz_root, args.dry_run)
     generate_pbiviz_tokens(cfg, pbiviz_root, args.dry_run)

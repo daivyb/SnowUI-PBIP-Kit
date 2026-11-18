@@ -95,6 +95,8 @@ export class Visual implements IVisual {
     private measureName: string = "Valor";
     private measureFormatSpec: ResolvedFormatSpec = resolveColumnFormatSpec();
     private hasData: boolean = false;
+    private lastViewportWidth: number = 580;
+    private lastViewportHeight: number = 328;
 
     constructor(options: VisualConstructorOptions) {
         this.host = options.host;
@@ -144,13 +146,15 @@ export class Visual implements IVisual {
         try {
             applyHostColorTokens(this.target, this.host.colorPalette);
             if (options.viewport?.width > 0) {
-                this.target.style.width = `${Math.floor(options.viewport.width)}px`;
+                this.lastViewportWidth = Math.floor(options.viewport.width);
+                this.target.style.width = `${this.lastViewportWidth}px`;
             }
             if (options.viewport?.height > 0) {
-                const h = Math.floor(options.viewport.height);
-                this.target.style.height = `${h}px`;
-                this.cardEl.style.height = `${h}px`;
+                this.lastViewportHeight = Math.floor(options.viewport.height);
+                this.target.style.height = `${this.lastViewportHeight}px`;
+                this.cardEl.style.height = `${this.lastViewportHeight}px`;
             }
+            this.cardEl.classList.toggle("is-compact", this.lastViewportHeight < 255 || this.lastViewportWidth < 360);
 
             const dataView = options.dataViews?.[0];
             this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(
@@ -417,8 +421,10 @@ export class Visual implements IVisual {
         this.svgRoot.onmouseleave = null;
         this.calloutEl.classList.remove("is-visible");
 
-        const width = Math.max(220, this.bodyEl.clientWidth || 540);
-        const height = Math.max(120, this.bodyEl.clientHeight || 200);
+        const rawW = this.bodyEl.clientWidth;
+        const rawH = this.bodyEl.clientHeight;
+        const width = Math.max(80, rawW > 0 ? rawW : Math.max(80, this.lastViewportWidth - 32));
+        const height = Math.max(48, rawH > 0 ? rawH : Math.max(48, this.lastViewportHeight - 56));
         this.svgRoot.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
         if (!this.hasData) {
@@ -450,9 +456,10 @@ export class Visual implements IVisual {
         marginLeft: number,
         marginRight: number,
         width: number,
+        tickCount: number = 4,
     ): void {
         const gridG = svgEl("g");
-        for (const t of yScale.ticks(4)) {
+        for (const t of yScale.ticks(tickCount)) {
             const ty = yScale(t);
             gridG.appendChild(
                 svgEl("line", {
@@ -537,26 +544,38 @@ export class Visual implements IVisual {
         const maxVal = d3.max(items, (d) => d.value) || 0;
         const yMax = maxVal > 0 ? maxVal * 1.15 : 100;
 
-        const preYScale = d3.scaleLinear().domain([0, yMax]).nice(4).range([100, 0]);
+        const tickCount = height < 140 ? 3 : 4;
+        const preYScale = d3.scaleLinear().domain([0, yMax]).nice(tickCount).range([100, 0]);
         const marginLeft = calcDynamicLeftMargin(
-            preYScale.ticks(4).map((t) => this.formatMeasureVal(t, true)),
-            46,
+            preYScale.ticks(tickCount).map((t) => this.formatMeasureVal(t, true)),
+            40,
             88,
             '10.5px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
         );
 
-        const xAxisFont = '11px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif';
-        const estStep = (width - marginLeft - 12) / Math.max(1, items.length);
-        const maxLabelW = Math.max(36, estStep - 6);
+        const xFontPx = width < 340 || height < 150 ? 9.5 : 11;
+        const xAxisFont = `${xFontPx}px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif`;
+        const rightPad = width < 340 ? 8 : 12;
+        const estStep = (width - marginLeft - rightPad) / Math.max(1, items.length);
+        const maxLabelW = Math.max(26, estStep - 4);
         const wrappedPerItem = items.map((item) => wrapLabelLines(item.category, maxLabelW, xAxisFont, 2));
         const hasMultiLine = wrappedPerItem.some((lines) => lines.length > 1);
 
-        const margin = { top: 34, right: 12, bottom: hasMultiLine ? 38 : 26, left: marginLeft };
-        const plotW = Math.max(80, width - margin.left - margin.right);
-        const plotH = Math.max(40, height - margin.top - margin.bottom);
+        const margin = {
+            top: height < 160 ? 24 : 32,
+            right: rightPad,
+            bottom: hasMultiLine ? (xFontPx < 10 ? 34 : 38) : 25,
+            left: marginLeft,
+        };
+        const plotW = Math.max(60, width - margin.left - margin.right);
+        const plotH = Math.max(24, height - margin.top - margin.bottom);
 
-        const yScale = d3.scaleLinear().domain([0, yMax]).nice(4).range([margin.top + plotH, margin.top]);
-        const xScale = d3.scaleBand<string>().domain(items.map((d) => d.category)).range([margin.left, margin.left + plotW]).padding(0.28);
+        const yScale = d3.scaleLinear().domain([0, yMax]).nice(tickCount).range([margin.top + plotH, margin.top]);
+        const xScale = d3
+            .scaleBand<string>()
+            .domain(items.map((d) => d.category))
+            .range([margin.left, margin.left + plotW])
+            .padding(width < 340 ? 0.22 : 0.28);
 
         const gradId = `snowPillGrad_${this.instanceId}`;
         const defs = svgEl("defs");
@@ -566,11 +585,11 @@ export class Visual implements IVisual {
         defs.appendChild(grad);
         this.svgRoot.appendChild(defs);
 
-        this.drawYAxisAndGrid(yScale, margin.left, margin.right, width);
+        this.drawYAxisAndGrid(yScale, margin.left, margin.right, width, tickCount);
 
         const topCat = items.reduce((best, cur) => (cur.value > best.value ? cur : best), items[0]).category;
         const featuredCat = this.hoveredCategory || this.selectedCategory || topCat;
-        const barW = Math.min(46, Math.max(18, xScale.bandwidth()));
+        const barW = Math.min(46, Math.max(10, xScale.bandwidth()));
         const rx = Math.min(14, barW / 2.2);
         const baseY = yScale(0);
 
@@ -610,7 +629,7 @@ export class Visual implements IVisual {
             barsG.appendChild(rect);
             rects.push({ rect, targetH, targetY, xCenter, item });
 
-            const xLbl = this.createWrappedXAxisText(xCenter, height, hasMultiLine, wrappedPerItem[idx], isFeatured, 11);
+            const xLbl = this.createWrappedXAxisText(xCenter, height, hasMultiLine, wrappedPerItem[idx], isFeatured, xFontPx);
             xLbl.setAttribute("data-cat", item.category);
             xAxisG.appendChild(xLbl);
 
@@ -774,28 +793,30 @@ export class Visual implements IVisual {
         }
         const yMax = maxSubTotal > 0 ? maxSubTotal * 1.15 : 100;
 
-        const preYScale = d3.scaleLinear().domain([0, yMax]).nice(4).range([100, 0]);
+        const tickCount = height < 140 ? 3 : 4;
+        const preYScale = d3.scaleLinear().domain([0, yMax]).nice(tickCount).range([100, 0]);
         const marginLeft = calcDynamicLeftMargin(
-            preYScale.ticks(4).map((t) => this.formatMeasureVal(t, true)),
-            48,
+            preYScale.ticks(tickCount).map((t) => this.formatMeasureVal(t, true)),
+            42,
             88,
             '10.5px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
         );
 
-        const xAxisFont = '11.5px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif';
+        const xFontPx = width < 480 || height < 150 ? 10 : 11.5;
+        const xAxisFont = `${xFontPx}px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif`;
         const estStep = (width - marginLeft - 12) / Math.max(1, groups.length);
-        const maxLabelW = Math.max(36, estStep - 6);
+        const maxLabelW = Math.max(28, estStep - 4);
         const wrappedGroups = groups.map((g) => wrapLabelLines(g.category, maxLabelW, xAxisFont, 2));
         const hasMultiLine = wrappedGroups.some((lines) => lines.length > 1);
 
-        const margin = { top: 24, right: 12, bottom: hasMultiLine ? 38 : 26, left: marginLeft };
-        const plotW = Math.max(80, width - margin.left - margin.right);
-        const plotH = Math.max(40, height - margin.top - margin.bottom);
+        const margin = { top: height < 160 ? 20 : 24, right: 12, bottom: hasMultiLine ? 36 : 25, left: marginLeft };
+        const plotW = Math.max(60, width - margin.left - margin.right);
+        const plotH = Math.max(24, height - margin.top - margin.bottom);
 
-        const yScale = d3.scaleLinear().domain([0, yMax]).nice(4).range([margin.top + plotH, margin.top]);
-        const xGroupScale = d3.scaleBand<string>().domain(groups.map((g) => g.category)).range([margin.left, margin.left + plotW]).padding(0.24);
+        const yScale = d3.scaleLinear().domain([0, yMax]).nice(tickCount).range([margin.top + plotH, margin.top]);
+        const xGroupScale = d3.scaleBand<string>().domain(groups.map((g) => g.category)).range([margin.left, margin.left + plotW]).padding(width < 520 ? 0.16 : 0.24);
 
-        this.drawYAxisAndGrid(yScale, margin.left, margin.right, width);
+        this.drawYAxisAndGrid(yScale, margin.left, margin.right, width, tickCount);
 
         const barsG = svgEl("g");
         const xAxisG = svgEl("g");
@@ -810,8 +831,8 @@ export class Visual implements IVisual {
             const gx = xGroupScale(grp.category) ?? margin.left;
             const gw = xGroupScale.bandwidth();
             const subCount = Math.max(1, grp.subBars.length);
-            const colGap = subCount > 1 ? 3 : 0;
-            const subW = Math.min(18, Math.max(4, (gw - colGap * (subCount - 1)) / subCount));
+            const colGap = subCount > 1 ? (gw < 26 ? 1.5 : 3) : 0;
+            const subW = Math.min(18, Math.max(2.5, (gw - colGap * (subCount - 1)) / subCount));
             const totalGroupWidth = subCount * subW + (subCount - 1) * colGap;
             const startX = gx + (gw - totalGroupWidth) / 2;
             const pillRx = Math.min(3.5, subW / 2);
@@ -898,7 +919,7 @@ export class Visual implements IVisual {
             });
 
             const isSel = this.selectedCategory === grp.category;
-            const xLbl = this.createWrappedXAxisText(gx + gw / 2, height, hasMultiLine, wrappedGroups[gIdx], isSel, 11.5);
+            const xLbl = this.createWrappedXAxisText(gx + gw / 2, height, hasMultiLine, wrappedGroups[gIdx], isSel, xFontPx);
             xAxisG.appendChild(xLbl);
         });
 

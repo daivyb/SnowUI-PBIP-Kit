@@ -65,6 +65,7 @@ export class Visual implements IVisual {
     private currentDisplayedDelta: number = 0;
     private hasRenderedOnce: boolean = false;
     private latestState: KpiDataState | null = null;
+    private lastViewportHeight: number = 156;
 
     constructor(options: VisualConstructorOptions) {
         this.host = options.host;
@@ -113,6 +114,7 @@ export class Visual implements IVisual {
             }
             if (options.viewport?.height > 0) {
                 const h = Math.floor(options.viewport.height);
+                this.lastViewportHeight = h;
                 this.target.style.height = `${h}px`;
                 this.cardEl.style.height = `${h}px`;
             }
@@ -217,11 +219,14 @@ export class Visual implements IVisual {
 
     private fitValueFontSize(text: string, hasDeltaOrSub: boolean): void {
         const cardW = this.cardEl.clientWidth || parseFloat(this.target.style.width) || 260;
-        const availW = Math.max(80, cardW - 40);
-        const deltaReserve = hasDeltaOrSub ? Math.min(availW * 0.42, 92) : 0;
-        const maxValW = Math.max(60, availW - deltaReserve - 10);
-        const measuredW = measureTextWidth(text, '700 27px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif');
-        const nextSize = measuredW > maxValW ? clamp(Math.floor(27 * (maxValW / measuredW)), 16, 27) : 27;
+        const cardH = this.cardEl.clientHeight || this.lastViewportHeight || 156;
+        const basePx = cardH < 76 ? 19 : cardH < 98 ? 22 : 27;
+        const padH = cardH < 76 ? 24 : cardH < 98 ? 28 : 40;
+        const availW = Math.max(80, cardW - padH);
+        const deltaReserve = hasDeltaOrSub ? Math.min(availW * 0.44, cardH < 98 ? 82 : 92) : 0;
+        const maxValW = Math.max(60, availW - deltaReserve - 8);
+        const measuredW = measureTextWidth(text, `700 ${basePx}px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif`);
+        const nextSize = measuredW > maxValW ? clamp(Math.floor(basePx * (maxValW / measuredW)), 14, basePx) : basePx;
         this.valueEl.style.fontSize = `${nextSize}px`;
     }
 
@@ -230,7 +235,9 @@ export class Visual implements IVisual {
         const cfgSurface = String(this.formattingSettings.cardStyle.surfaceMode.value || "auto");
         const resolvedSurface = cfgSurface === "auto" ? BRAND_TOKENS.style.kpiSurfaceMode : cfgSurface;
         const radius = Math.max(0, Math.min(36, this.formattingSettings.cardStyle.cornerRadius.value ?? BRAND_TOKENS.style.cornerRadius));
-        this.cardEl.className = `snow-kpi-card variant-${variant} surface-${resolvedSurface}`;
+        const h = this.cardEl.clientHeight || this.lastViewportHeight || 156;
+        const compactCls = h < 76 ? " is-ultra-compact" : h < 98 ? " is-compact" : "";
+        this.cardEl.className = `snow-kpi-card variant-${variant} surface-${resolvedSurface}${compactCls}`;
         this.cardEl.style.borderRadius = `${radius}px`;
     }
 

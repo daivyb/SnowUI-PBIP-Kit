@@ -86,77 +86,42 @@ export const BRAND_TOKENS: BrandTokensConfig = {
     "visualDefaults": {
         "splineLineColor": "#AF52DE",
         "barDefaultAccent": "#007AFF",
-        "defaultTableTitle": "Proyectos",
+        "defaultTableTitle": "Registros",
         "defaultEmptyMessage": "Ajusta los filtros superiores para visualizar registros.",
-        "seriesColorRules": [
-            {
-                "match": [
-                    "técnico",
-                    "tecnico"
-                ],
-                "color": "#FF3B30",
-                "stackOrder": 2
-            },
-            {
-                "match": [
-                    "sin clasificar",
-                    "no registrado"
-                ],
-                "color": "#C7C7CC",
-                "stackOrder": 1
-            },
-            {
-                "match": [
-                    "administrativo"
-                ],
-                "color": "#1C1C1E",
-                "stackOrder": 0
-            }
-        ],
-        "columnFriendlyNames": {
-            "AlertaSinMovimiento": "Alerta",
-            "TipoIntervencion": "Tipo Intervención",
-            "EstadoPlanOperativoAnual": "Estado POA",
-            "UnidadEjecutora": "Unidad Ejecutora",
-            "AreaTematica": "Área Temática"
-        }
+        "seriesColorRules": [],
+        "columnFriendlyNames": {}
     },
     "statusRules": [
         {
             "match": [
-                "no registrado",
-                "sin clasificar"
-            ],
-            "tone": "muted"
-        },
-        {
-            "match": [
-                "sí, con ejecución",
-                "si, con ejecucion",
+                "activo",
                 "al día",
-                "complet"
+                "complet",
+                "aprobado"
             ],
-            "tone": "positive",
-            "label": "Activo · POA"
+            "tone": "positive"
         },
         {
             "match": [
-                "no, sin ejecución",
-                "sin movimiento",
                 "alerta",
-                "sí"
+                "crítico",
+                "retraso",
+                "rechazado"
             ],
             "tone": "negative"
         },
         {
             "match": [
-                "técnico",
-                "tecnico"
+                "en curso",
+                "en proceso",
+                "técnico"
             ],
             "tone": "primary"
         },
         {
             "match": [
+                "pendiente",
+                "revisión",
                 "administrativo"
             ],
             "tone": "secondary"

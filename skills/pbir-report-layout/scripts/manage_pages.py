@@ -284,7 +284,83 @@ def sync_all_pages(repo_root: str, report_dir: str, custom_icons: dict[str, str]
             json.dump(bm, f, indent=2, ensure_ascii=False)
 
 
-def apply_canvas_preset(page_dir: str, pid: str, preset: str) -> None:
+def load_layout_cache(repo_root: str) -> dict:
+    p = os.path.join(repo_root, ".snowui-page-layouts.json")
+    if os.path.exists(p):
+        try:
+            return json.load(open(p, encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def save_layout_cache(repo_root: str, cache: dict) -> None:
+    p = os.path.join(repo_root, ".snowui-page-layouts.json")
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(cache, f, indent=2, ensure_ascii=False)
+
+
+def sync_sidebar_svg_height(report_dir: str, page_height: int) -> None:
+    sb_svg = os.path.join(report_dir, "StaticResources", "RegisteredResources", "chrome-sidebar.svg")
+    if not os.path.exists(sb_svg):
+        return
+    txt = open(sb_svg, encoding="utf-8").read()
+    sb_h = max(700, int(page_height) - 28)
+    sb_div_bottom = sb_h - 82
+    txt = re.sub(r'height="\d+"', f'height="{sb_h}"', txt, count=1)
+    txt = re.sub(r'viewBox="0 0 212 \d+"', f'viewBox="0 0 212 {sb_h}"', txt, count=1)
+    txt = re.sub(r'(<rect\b[^>]*\bheight=")\d+(")', rf"\g<1>{sb_h - 1}\g<2>", txt, count=1)
+    lines = list(re.finditer(r'<line\b[^>]*/>', txt))
+    if len(lines) >= 2:
+        last_line = lines[-1]
+        updated_line = re.sub(r'\by1="\d+"', f'y1="{sb_div_bottom}"', last_line.group(0))
+        updated_line = re.sub(r'\by2="\d+"', f'y2="{sb_div_bottom}"', updated_line)
+        txt = txt[:last_line.start()] + updated_line + txt[last_line.end():]
+    with open(sb_svg, "w", encoding="utf-8") as f:
+        f.write(txt)
+
+
+def _cluster_rows(items: list[dict], tol: float = 32.0) -> list[list[dict]]:
+    rows: list[list[dict]] = []
+    for item in sorted(items, key=lambda it: (it["pos"].get("y", 0), it["pos"].get("x", 0))):
+        y = float(item["pos"].get("y", 0))
+        if not rows or abs(y - float(rows[-1][0]["pos"].get("y", 0))) > tol:
+            rows.append([item])
+        else:
+            rows[-1].append(item)
+    for row in rows:
+        row.sort(key=lambda it: it["pos"].get("x", 0))
+    return rows
+
+
+def _layout_bento_row(row_items: list[dict], y: int, h: int, body_x: int = 244, body_w: int = 1180, gap_x: int = 16) -> None:
+    if not row_items:
+        return
+    weights: list[float] = []
+    for it in row_items:
+        vtype = it["data"].get("visual", {}).get("visualType", "")
+        if vtype in ("snowuiSplineChartE1A4B802", "lineChart", "areaChart", "map"):
+            weights.append(2.0)
+        elif vtype in ("snowuiPillTableE1A4B804", "tableEx", "pivotTable"):
+            weights.append(1.38)
+        else:
+            weights.append(1.0)
+    avail_w = body_w - gap_x * (len(row_items) - 1)
+    total_w_weight = sum(weights) or 1.0
+    cur_x = body_x
+    for idx, it in enumerate(row_items):
+        if idx == len(row_items) - 1:
+            w = (body_x + body_w) - cur_x
+        else:
+            w = max(120, round(avail_w * (weights[idx] / total_w_weight)))
+        it["pos"]["x"] = cur_x
+        it["pos"]["y"] = y
+        it["pos"]["width"] = w
+        it["pos"]["height"] = h
+        cur_x += w + gap_x
+
+
+def apply_canvas_preset(repo_root: str, report_dir: str, page_dir: str, pid: str, preset: str) -> None:
     if preset not in PRESET_DIMS:
         raise ValueError(f"Preset desconocido: {preset}")
     pjson_path = os.path.join(page_dir, "page.json")
@@ -301,39 +377,129 @@ def apply_canvas_preset(page_dir: str, pid: str, preset: str) -> None:
     if abs(old_h - new_h) < 1:
         return
 
-    # Escalar región de contenido y ajustar sidebar/footer manteniendo topbar fija (y: 14..94)
     vroot = os.path.join(page_dir, "visuals")
-    old_body_top = 104.0
-    old_body_bottom = old_h - 68.0
-    new_body_top = 104.0
-    new_body_bottom = new_h - 48.0
-    scale_y = (new_body_bottom - new_body_top) / max(100.0, old_body_bottom - old_body_top)
-
+    records: list[dict] = []
     for vid in sorted(os.listdir(vroot)):
         vfile = os.path.join(vroot, vid, "visual.json")
         if not os.path.exists(vfile):
             continue
         vdata = json.load(open(vfile, encoding="utf-8"))
         vname = vdata.get("name", vid)
-        pos = vdata.get("position", {})
+        records.append({"vid": vid, "file": vfile, "name": vname, "data": vdata, "pos": vdata.get("position", {})})
+
+    # Respaldar layout original web-scroll antes de comprimir/reorganizar en Bento 16:9
+    cache = load_layout_cache(repo_root)
+    if old_h >= 1200 and preset == "screen-16x9":
+        cache.setdefault(pid, {})["web-scroll"] = {
+            r["name"]: {k: r["pos"][k] for k in ("x", "y", "width", "height") if k in r["pos"]}
+            for r in records
+        }
+        save_layout_cache(repo_root, cache)
+
+    # Ajustar Chrome lateral, pie de página y título de sección
+    body_items: list[dict] = []
+    for r in records:
+        vname = r["name"]
+        pos = r["pos"]
         if vname == f"{pid}_bg_sidebar":
             pos["height"] = int(new_h - 28)
         elif vname == f"{pid}_side_meta":
-            pos["y"] = int(new_h - 82)
-            pos["height"] = 48 if preset == "screen-16x9" else 64
+            pos["y"] = int(new_h - 90) if preset == "screen-16x9" else int(new_h - 82)
+            pos["height"] = 64
         elif vname == f"{pid}_footer":
-            pos["y"] = int(new_h - 42)
-            pos["height"] = 36
-        elif pos.get("y", 0) >= old_body_top and "_nav_" not in vname:
-            rel_y = pos["y"] - old_body_top
-            new_y = round(new_body_top + rel_y * scale_y)
-            new_vh = max(34 if vdata.get("visual", {}).get("visualType") == "textbox" else 60, round(pos["height"] * scale_y))
-            if new_y + new_vh > new_body_bottom:
-                new_vh = max(34, int(new_body_bottom - new_y))
-            pos["y"] = new_y
-            pos["height"] = new_vh
-        with open(vfile, "w", encoding="utf-8") as f:
-            json.dump(vdata, f, indent=2, ensure_ascii=False)
+            pos["y"] = int(new_h - 37) if preset == "screen-16x9" else int(new_h - 48)
+            pos["height"] = 34 if preset == "screen-16x9" else 36
+        elif vname.endswith("_sec_title") or (
+            r["data"].get("visual", {}).get("visualType") == "textbox"
+            and 96 <= float(pos.get("y", 0)) < 138
+            and float(pos.get("x", 0)) >= 230
+            and not any(vname.endswith(s) for s in SHELL_SUFFIXES)
+        ):
+            pos["y"] = 102 if preset == "screen-16x9" else 104
+            pos["height"] = 34 if preset == "screen-16x9" else 40
+        elif pos.get("y", 0) >= 100 and "_nav_" not in vname and not any(vname.endswith(s) for s in SHELL_SUFFIXES):
+            body_items.append(r)
+
+    if preset == "web-scroll":
+        saved = cache.get(pid, {}).get("web-scroll")
+        if isinstance(saved, dict):
+            for r in records:
+                if r["name"] in saved:
+                    r["pos"].update(saved[r["name"]])
+        else:
+            # Expansión limpia fila a fila si la página nació directamente en 16:9
+            rows = _cluster_rows(body_items)
+            cur_y = 148
+            for row in rows:
+                is_kpi = all(it["data"].get("visual", {}).get("visualType") == "snowuiKpiCardE1A4B801" for it in row)
+                row_h = 156 if is_kpi else (340 if len(row) <= 2 else 300)
+                if not is_kpi and len(row) >= 3:
+                    # Desempacar filas Bento anchas en bloques cómodos de 1180px / 580px
+                    for it in row:
+                        vtype = it["data"].get("visual", {}).get("visualType", "")
+                        it["pos"]["x"] = 244
+                        it["pos"]["y"] = cur_y
+                        it["pos"]["width"] = 1180
+                        it["pos"]["height"] = 330 if vtype != "snowuiPillTableE1A4B804" else 360
+                        cur_y += it["pos"]["height"] + 20
+                else:
+                    for it in row:
+                        it["pos"]["y"] = cur_y
+                        it["pos"]["height"] = row_h
+                    cur_y += row_h + 20
+    else:
+        # Diseño ejecutivo Bento widescreen para screen-16x9 (1440x810)
+        rows = _cluster_rows(body_items)
+        kpi_rows = [row for row in rows if all(it["data"].get("visual", {}).get("visualType") == "snowuiKpiCardE1A4B801" for it in row)]
+        content_rows = [row for row in rows if row not in kpi_rows]
+
+        if kpi_rows:
+            for kpi in kpi_rows[0]:
+                kpi["pos"]["y"] = 140
+                kpi["pos"]["height"] = 84
+            chart_top = 236
+        else:
+            chart_top = 140
+
+        chart_bottom = 766
+        avail_h = max(200, chart_bottom - chart_top)
+
+        if len(content_rows) <= 2:
+            gap_y = 14
+            row_h = (avail_h - gap_y * max(0, len(content_rows) - 1)) // max(1, len(content_rows))
+            cur_y = chart_top
+            for row in content_rows:
+                for it in row:
+                    it["pos"]["y"] = cur_y
+                    it["pos"]["height"] = row_h
+                cur_y += row_h + gap_y
+        else:
+            # Agrupar 3+ filas en 2 filas Bento amplias (>= 250px cada fila)
+            all_content = [it for row in content_rows for it in row]
+            tables = [it for it in all_content if it["data"].get("visual", {}).get("visualType") in ("snowuiPillTableE1A4B804", "tableEx", "pivotTable")]
+            non_tables = [it for it in all_content if it not in tables]
+
+            bottom_items = list(tables)
+            top_items = list(non_tables)
+            if not bottom_items and len(top_items) >= 2:
+                half = (len(top_items) + 1) // 2
+                bottom_items = top_items[half:]
+                top_items = top_items[:half]
+            elif len(bottom_items) == 1 and len(top_items) >= 3:
+                if len(top_items) >= 4 or top_items[-1]["pos"].get("width", 0) >= 900:
+                    bottom_items.insert(0, top_items.pop())
+
+            gap_y = 14
+            top_h = 250
+            bot_h = avail_h - top_h - gap_y
+            _layout_bento_row(top_items, chart_top, top_h)
+            _layout_bento_row(bottom_items, chart_top + top_h + gap_y, bot_h)
+
+    for r in records:
+        with open(r["file"], "w", encoding="utf-8") as f:
+            json.dump(r["data"], f, indent=2, ensure_ascii=False)
+
+    sync_sidebar_svg_height(report_dir, int(new_h))
 
 
 def cmd_clone(args: argparse.Namespace, paths) -> int:
@@ -379,7 +545,18 @@ def cmd_clone(args: argparse.Namespace, paths) -> int:
             os.rename(old_vdir, new_vdir)
 
     if args.preset:
-        apply_canvas_preset(dst_dir, args.target, args.preset)
+        apply_canvas_preset(paths.repo_root, paths.report_dir, dst_dir, args.target, args.preset)
+    else:
+        cache = load_layout_cache(paths.repo_root)
+        if args.source in cache and isinstance(cache[args.source], dict):
+            src_map = cache[args.source].get("web-scroll", {})
+            if src_map:
+                dst_map = {}
+                for k, v in src_map.items():
+                    new_k = f"{args.target}_{k[len(args.source) + 1:]}" if k.startswith(f"{args.source}_") else f"{args.target}_{k}"
+                    dst_map[new_k] = v
+                cache.setdefault(args.target, {})["web-scroll"] = dst_map
+                save_layout_cache(paths.repo_root, cache)
 
     pages_meta_path = os.path.join(pages_dir, "pages.json")
     pages_meta = json.load(open(pages_meta_path, encoding="utf-8"))
@@ -433,7 +610,14 @@ def cmd_set_preset(args: argparse.Namespace, paths) -> int:
     for pid in targets:
         pdir = os.path.join(pages_dir, pid)
         if os.path.isdir(pdir):
-            apply_canvas_preset(pdir, pid, args.preset)
+            apply_canvas_preset(paths.repo_root, paths.report_dir, pdir, pid, args.preset)
+    if args.target == "all":
+        bc_path = os.path.join(paths.repo_root, "brand-config.json")
+        if os.path.exists(bc_path):
+            bc = json.load(open(bc_path, encoding="utf-8"))
+            bc.setdefault("style", {})["canvasPreset"] = args.preset
+            with open(bc_path, "w", encoding="utf-8") as f:
+                json.dump(bc, f, indent=2, ensure_ascii=False)
     print(f"Preset '{args.preset}' aplicado a: {', '.join(targets)}")
     return 0
 

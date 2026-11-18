@@ -165,6 +165,7 @@ export class Visual implements IVisual {
                 this.target.style.height = `${this.lastViewportHeight}px`;
                 this.cardEl.style.height = `${this.lastViewportHeight}px`;
             }
+            this.cardEl.classList.toggle("is-compact", this.lastViewportHeight < 260 || this.lastViewportWidth < 460);
 
             const dataView = options.dataViews?.[0];
             this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(
@@ -496,8 +497,10 @@ export class Visual implements IVisual {
         this.calloutEl.classList.remove("is-visible");
         this.currentHoverIndex = -1;
 
-        const width = Math.max(240, this.canvasWrapEl.clientWidth || Math.max(240, this.lastViewportWidth - 44));
-        const height = Math.max(140, this.canvasWrapEl.clientHeight || Math.max(140, this.lastViewportHeight - 72));
+        const rawW = this.canvasWrapEl.clientWidth;
+        const rawH = this.canvasWrapEl.clientHeight;
+        const width = Math.max(80, rawW > 0 ? rawW : Math.max(80, this.lastViewportWidth - 40));
+        const height = Math.max(56, rawH > 0 ? rawH : Math.max(56, this.lastViewportHeight - 62));
         this.svgRoot.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
         const activeList = this.getActiveSeriesList();
@@ -535,20 +538,26 @@ export class Visual implements IVisual {
         const domainMin = dataMin < 0 ? dataMin * 1.12 : 0;
         const domainMax = dataMax > 0 ? dataMax * 1.15 : (dataMin < 0 ? 0 : 100);
 
-        const preScale = d3.scaleLinear().domain([domainMin, domainMax]).nice(4).range([100, 0]);
-        const preTickStrings = preScale.ticks(4).map((t) => this.formatSpecValue(t, fmt, true));
+        const tickCount = height < 140 ? 3 : 4;
+        const preScale = d3.scaleLinear().domain([domainMin, domainMax]).nice(tickCount).range([100, 0]);
+        const preTickStrings = preScale.ticks(tickCount).map((t) => this.formatSpecValue(t, fmt, true));
         const marginLeft = calcDynamicLeftMargin(
             preTickStrings,
-            48,
+            42,
             88,
             '11px "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
         );
 
-        const margin = { top: 28, right: 20, bottom: 28, left: marginLeft };
-        const plotW = Math.max(80, width - margin.left - margin.right);
-        const plotH = Math.max(50, height - margin.top - margin.bottom);
+        const margin = {
+            top: height < 170 ? 22 : 28,
+            right: width < 400 ? 12 : 20,
+            bottom: height < 170 ? 22 : 28,
+            left: marginLeft,
+        };
+        const plotW = Math.max(60, width - margin.left - margin.right);
+        const plotH = Math.max(28, height - margin.top - margin.bottom);
 
-        const yScale = d3.scaleLinear().domain([domainMin, domainMax]).nice(4).range([margin.top + plotH, margin.top]);
+        const yScale = d3.scaleLinear().domain([domainMin, domainMax]).nice(tickCount).range([margin.top + plotH, margin.top]);
         const yDom = yScale.domain();
         const baselineVal = clamp(0, yDom[0], yDom[1]);
         const baselineY = yScale(baselineVal);
@@ -567,7 +576,7 @@ export class Visual implements IVisual {
         defs.appendChild(grad);
         this.svgRoot.appendChild(defs);
 
-        const ticks = yScale.ticks(4);
+        const ticks = yScale.ticks(tickCount);
         const gridG = svgEl("g");
         for (const t of ticks) {
             const ty = yScale(t);
